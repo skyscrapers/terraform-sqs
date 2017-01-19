@@ -1,7 +1,7 @@
-
 resource "aws_iam_policy" "policy" {
-    name = "sqs_${var.name}_${var.project}_${var.environment}"
-    policy = <<EOF
+  name = "sqs_${var.name}_${var.project}_${var.environment}"
+
+  policy = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
