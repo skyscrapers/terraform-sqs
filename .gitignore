@@ -1,3 +1,6 @@
 # Compiled files
 *.tfstate
 *.tfstate.backup
+.DS_Store
+.DS_Store?
+._*
