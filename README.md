@@ -12,7 +12,8 @@ Adds a iam profile and sqs queue.
 
 ### Output
  * [`arn`]: String: The Amazon Resource Name (ARN) specifying the role.
- * [`policy`]: String: The arn of the IAM policy generated.
+ * [`consumer_policy`]: String: The arn of the IAM policy used by the queue consumer / worker.
+ * [`pusher_policy`]: String: The arn of the IAM policy used by the queue pusher.
 
 ### Example
 ```
@@ -24,6 +25,6 @@ Adds a iam profile and sqs queue.
   }
   resource "aws_iam_role_policy_attachment" "sqs-attach" {
       role = "${module.instance.role}"
-      policy_arn = "${module.sqs_api.policy}"
+      policy_arn = "${module.sqs_api.consumer_policy}"
   }
 ```
