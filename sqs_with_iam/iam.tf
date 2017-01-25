@@ -11,8 +11,9 @@ resource "aws_iam_policy" "consumer_policy" {
         "sqs:GetQueueAttributes",
         "sqs:GetQueueUrl",
         "sqs:ReceiveMessage",
-        "sqs:DeleteMessage",
-        "sqs:PurgeQueue"
+        "sqs:DeleteMessage*",
+        "sqs:PurgeQueue",
+        "sqs:ChangeMessageVisibility*"
       ],
       "Resource": [
         "${aws_sqs_queue.queue.arn}"
@@ -35,8 +36,7 @@ resource "aws_iam_policy" "pusher_policy" {
       "Action": [
         "sqs:GetQueueAttributes",
         "sqs:GetQueueUrl",
-        "sqs:SendMessage",
-        "sqs:SendMessageBatch"
+        "sqs:SendMessage*"
       ],
       "Resource": [
         "${aws_sqs_queue.queue.arn}"
