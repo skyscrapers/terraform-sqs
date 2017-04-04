@@ -2,11 +2,12 @@ data "template_file" "redrive_policy" {
   template = <<EOF
 {
   "deadLetterTargetArn":"$${dlq}",
-  "maxReceiveCount":5
+  "maxReceiveCount":$${mrc}
 }
 EOF
   vars {
     dlq = "${var.dead_letter_queue}"
+    mrc = "${var.max_receive_count}"
   }
 }
 

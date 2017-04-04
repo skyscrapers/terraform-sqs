@@ -33,3 +33,8 @@ variable "dead_letter_queue" {
   description = "The dead letter queue to use for undeliverable messages"
   default = ""
 }
+
+variable "max_receive_count" {
+  description = "Maximum receive count"
+  default = "5"
+}
