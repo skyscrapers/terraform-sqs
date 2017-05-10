@@ -12,6 +12,7 @@ Adds a iam profile and sqs queue.
 
 ### Output
  * [`arn`]: String: The Amazon Resource Name (ARN) specifying the role.
+ * [`id`]: String: The URL for the created Amazon SQS queue.
  * [`consumer_policy`]: String: The arn of the IAM policy used by the queue consumer / worker.
  * [`pusher_policy`]: String: The arn of the IAM policy used by the queue pusher.
 
