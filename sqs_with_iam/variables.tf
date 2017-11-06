@@ -38,3 +38,8 @@ variable "max_receive_count" {
   description = "Maximum receive count"
   default     = "5"
 }
+
+variable "fifo_queue" {
+  description = "Configure the queue to be a FIFO queue"
+  default     = "false"
+}
