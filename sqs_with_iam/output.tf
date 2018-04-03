@@ -7,9 +7,9 @@ output "id" {
 }
 
 output "pusher_policy" {
-  value = ["${aws_iam_policy.pusher_policy.arn}"]
+  value = ["${aws_iam_policy.pusher_policy.*.arn}"]
 }
 
 output "consumer_policy" {
-  value = ["${aws_iam_policy.consumer_policy.arn}"]
+  value = ["${aws_iam_policy.consumer_policy.*.arn}"]
 }
