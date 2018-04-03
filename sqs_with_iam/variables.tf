@@ -2,7 +2,11 @@ variable "environment" {}
 
 variable "project" {}
 
-variable "name" {}
+variable "name" {
+  description = "list of the sqs queues"
+  type        = "list"
+  default     = []
+}
 
 variable "visibility_timeout_seconds" {
   description = "the timeout in seconds of visibility of the message"
