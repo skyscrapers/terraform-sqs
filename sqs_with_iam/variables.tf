@@ -5,7 +5,6 @@ variable "project" {}
 variable "name" {
   description = "list of the sqs queues"
   type        = "list"
-  default     = []
 }
 
 variable "visibility_timeout_seconds" {
