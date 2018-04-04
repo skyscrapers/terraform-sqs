@@ -17,7 +17,7 @@ resource "aws_iam_policy" "consumer_policy" {
         "sqs:ChangeMessageVisibility*"
       ],
       "Resource": [
-        "${aws_sqs_queue.queue.arn}"
+        "${element(aws_sqs_queue.queue.*.arn, count.index)}"
       ]
     }
   ]
@@ -41,7 +41,7 @@ resource "aws_iam_policy" "pusher_policy" {
         "sqs:SendMessage*"
       ],
       "Resource": [
-        "${aws_sqs_queue.queue.arn}"
+        "${element(aws_sqs_queue.queue.*.arn, count.index)}"
       ]
     }
   ]
