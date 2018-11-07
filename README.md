@@ -30,6 +30,7 @@ Adds a iam profile and sqs queue.
 | consumer_policy | A list of the arns of the IAM policies used by the queue pusher. |
 | id | The URL for the created Amazon SQS queue. |
 | pusher_policy | A list of the arns of the IAM policies used by the queue consumer / worker. |
+| queue_count | The number of queues to be created. To be used downstream |
 
 ### Examples
 
@@ -44,7 +45,7 @@ module "sqs" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs-attach" {
-  count      = "${length(module.sqs.consumer_policy)}"
+  count      = "${module.sqs.queue_count}"
   role       = "some_role_name"
   policy_arn = "${module.sqs.consumer_policy[count.index]}"
 }
@@ -62,7 +63,7 @@ module "sqs" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs-attach" {
-  count      = "${length(module.sqs.consumer_policy)}"
+  count      = "${module.sqs.queue_count}"
   role       = "some_role_name"
   policy_arn = "${module.sqs.consumer_policy[count.index]}"
 }
