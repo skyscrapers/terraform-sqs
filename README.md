@@ -8,49 +8,60 @@ Adds a iam profile and sqs queue.
 
 ### Available variables:
 
-* [`project`]: String(required): The project of this queue
-* [`environment`]: String(required): How do you want to call your environment, this is helpful if you have more than 1 VPC.
-* [`name`]: List(required): A list of the sqs queues
-* [`fifo_queue`]: Boolean(optional, defaults to `false`): Create a FIFO queue.
-  This will append the required extension `.fifo` to the queue name.
-* all other variables and description can be found in the variables.tf section
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| dead_letter_queue | The dead letter queue to use for undeliverable messages | string | `` | no |
+| delay_seconds | Delay in displaying message | string | `0` | no |
+| environment | How do you want to call your environment, this is helpful if you have more than 1 VPC | string | - | yes |
+| fifo_queue | Configure the queue(s) to be FIFO queue(s). This will append the required extension `.fifo` to the queue name(s). | string | `false` | no |
+| max_message_size | Max size of the message default to 256KB | string | `262144` | no |
+| max_receive_count | Maximum receive count | string | `5` | no |
+| message_retention_seconds | Seconds of retention of the message default to 4 days | string | `345600` | no |
+| name | List of the SQS queue names. If you provide multiple names, each queue will be setup with the same configuration | list | - | yes |
+| project | The project of this queue(s) | string | - | yes |
+| receive_wait_time_seconds | The time for which a ReceiveMessage call will wait for a message to arrive (long polling) before returning. An integer from 0 to 20 (seconds). The default for this attribute is 0, meaning that the call will return immediately. | string | `20` | no |
+| visibility_timeout_seconds | The timeout in seconds of visibility of the message | string | `30` | no |
 
-### Output
+## Outputs
 
-* [`arn`]: String: The Amazon Resource Name (ARN) specifying the role.
-* [`id`]: String: The URL for the created Amazon SQS queue.
-* [`consumer_policy`]: List: A list of the arns of the IAM policies used by the queue consumer / worker.
-* [`pusher_policy`]: List: A list of the arns of the IAM policies used by the queue pusher.
+| Name | Description |
+|------|-------------|
+| arn | The Amazon Resource Name (ARN) specifying the role. |
+| consumer_policy | A list of the arns of the IAM policies used by the queue pusher. |
+| id | The URL for the created Amazon SQS queue. |
+| pusher_policy | A list of the arns of the IAM policies used by the queue consumer / worker. |
 
 ### Examples
 
 *Standard queue*
 
 ```hcl
-  module "sqs" {
-    source      = "github.com/skyscrapers/terraform-sqs//sqs_with_iam"
-    environment = "${var.environment}"
-    project     = "${var.project}"
-    name        = ["sqs_name"]
-  }
-  resource "aws_iam_role_policy_attachment" "sqs-attach" {
-      role       = "${module.instance.role}"
-      policy_arn = "${module.sqs_api.consumer_policy}"
-  }
+module "sqs" {
+  source      = "github.com/skyscrapers/terraform-sqs//sqs_with_iam"
+  environment = "staging"
+  project     = "example"
+  name        = ["sqs_name"]
+}
+
+resource "aws_iam_role_policy_attachment" "sqs-attach" {
+  role       = "some_role_name"
+  policy_arn = "${module.sqs.consumer_policy}"
+}
 ```
 
 *FIFO queue*
 
 ```hcl
-  module "sqs" {
-    source      = "github.com/skyscrapers/terraform-sqs//sqs_with_iam"
-    environment = "${var.environment}"
-    project     = "${var.project}"
-    name        = ["sqs_name"]
-    fifo_queue  = "true"
-  }
-  resource "aws_iam_role_policy_attachment" "sqs-attach" {
-      role       = "${module.instance.role}"
-      policy_arn = "${module.sqs_api.consumer_policy}"
-  }
+module "sqs" {
+  source      = "github.com/skyscrapers/terraform-sqs//sqs_with_iam"
+  environment = "staging"
+  project     = "example"
+  name        = ["sqs_name"]
+  fifo_queue  = "true"
+}
+
+resource "aws_iam_role_policy_attachment" "sqs-attach" {
+  role       = "some_role_name"
+  policy_arn = "${module.sqs.consumer_policy}"
+}
 ```
