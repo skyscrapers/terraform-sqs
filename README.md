@@ -44,8 +44,9 @@ module "sqs" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs-attach" {
+  count      = "${length(module.sqs.consumer_policy)}"
   role       = "some_role_name"
-  policy_arn = "${module.sqs.consumer_policy}"
+  policy_arn = "${module.sqs.consumer_policy[count.index]}"
 }
 ```
 
@@ -61,7 +62,8 @@ module "sqs" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs-attach" {
+  count      = "${length(module.sqs.consumer_policy)}"
   role       = "some_role_name"
-  policy_arn = "${module.sqs.consumer_policy}"
+  policy_arn = "${module.sqs.consumer_policy[count.index]}"
 }
 ```
