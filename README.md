@@ -56,7 +56,7 @@ module "sqs" {
   source      = "github.com/skyscrapers/terraform-sqs//sqs_with_iam"
   environment = "staging"
   project     = "example"
-  name        = ["sqs_name"]
+  name        = ["sqs_name", "another_sqs_queue_name"]
   fifo_queue  = "true"
 }
 
