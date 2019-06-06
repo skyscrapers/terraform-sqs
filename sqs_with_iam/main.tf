@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-}
-
 data "template_file" "redrive_policy" {
   template = <<EOF
 {
