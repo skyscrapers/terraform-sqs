@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "consumer_policy" {
-  count = "${length(var.name)}"
+  count = length(var.name)
   name  = "sqs_${var.name[count.index]}_${var.project}_${var.environment}_consumer"
 
   policy = <<EOF
@@ -23,11 +23,12 @@ resource "aws_iam_policy" "consumer_policy" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_policy" "pusher_policy" {
-  count = "${length(var.name)}"
-  name  = "sqs_${var.name[count.index]}_${var.project}_${var.environment}_pusher"
+  count = length(var.name)
+  name = "sqs_${var.name[count.index]}_${var.project}_${var.environment}_pusher"
 
   policy = <<EOF
 {
@@ -47,4 +48,6 @@ resource "aws_iam_policy" "pusher_policy" {
   ]
 }
 EOF
+
 }
+

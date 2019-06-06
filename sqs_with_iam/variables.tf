@@ -8,7 +8,7 @@ variable "project" {
 
 variable "name" {
   description = "List of the SQS queue names. If you provide multiple names, each queue will be setup with the same configuration"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "visibility_timeout_seconds" {
@@ -50,3 +50,4 @@ variable "fifo_queue" {
   description = "Configure the queue(s) to be FIFO queue(s). This will append the required extension `.fifo` to the queue name(s)."
   default     = "false"
 }
+
