@@ -28,7 +28,7 @@ Adds a iam profile and sqs queue.
 |------|-------------|
 | arn | The Amazon Resource Name (ARN) specifying the role. |
 | consumer_policy | A list of the arns of the IAM policies used by the queue pusher. |
-| id | The URL for the created Amazon SQS queue. |
+| id | A list of URLs for the created Amazon SQS queues. |
 | pusher_policy | A list of the arns of the IAM policies used by the queue consumer / worker. |
 | queue_count | The number of queues to be created. To be used downstream |
 
