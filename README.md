@@ -64,9 +64,7 @@ No modules.
 
 ### Examples
 
-*Standard queue*
-
-```hcl
+```terraform
 module "sqs" {
   source = "github.com/skyscrapers/terraform-sqs//sqs_with_iam?ref=4.0.0"
 
@@ -81,3 +79,35 @@ resource "aws_iam_role_policy_attachment" "sqs_consumer_attach" {
   policy_arn = module.sqs["myqueue"].consumer_policy_arn
 }
 ```
+
+### Migrating from 3.0.0 to 4.0.0
+
+This module has been completely rewritten between v3 and v4. Most important changes:
+
+- Removed the `count` on the resources. Instead you can use `for_each` on the module
+
+  You could migrate existing state, for example:
+
+  ```terraform
+  module "sqs" {
+    source   = "github.com/skyscrapers/terraform-sqs//sqs_with_iam?ref=4.0.0"
+
+    for_each = toset(["queue1", "queue2"])
+    name     = "${terraform.workspace}_myproject_${each.key}"
+  }
+  ```
+
+  ```shell
+  terraform state mv module.sqs.aws_sqs_queue.queue[0] module.sqs["queue1"].aws_sqs_queue.queue
+  terraform state mv module.sqs.aws_sqs_queue.queue[1] module.sqs["queue2"].aws_sqs_queue.queue
+  ```
+
+- Removed the `environment` and `project` variables. Instead provide a `name` variable of choice. To keep the previous queue name, you can set `name = "<environment>_<project>_<oldname>"`
+- Renamed the AWS IAM Policies created by the module. This is breaking without a migration path: policies will be destroyed and recreated. You can remove the old policies from the Terraform state (and cleanup manually afterwards) via:
+
+  ```shell
+  terraform state rm aws_iam_policy.consumer_policy
+  terraform state rm aws_iam_policy.pusher_policy
+  ```
+
+- Renamed outputs: `pusher_policy` becomes `pusher_policy_arn` and `consumer_policy` becomes `consumer_policy_arn`
