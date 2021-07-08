@@ -1,53 +1,38 @@
-resource "aws_iam_policy" "consumer_policy" {
-  count = length(var.name)
-  name  = "sqs_${var.name[count.index]}_${var.project}_${var.environment}_consumer"
+data "aws_iam_policy_document" "consumer" {
+  statement {
+    effect    = "Allow"
+    resources = [aws_sqs_queue.queue.arn]
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "sqs:GetQueueAttributes",
-        "sqs:GetQueueUrl",
-        "sqs:ReceiveMessage",
-        "sqs:DeleteMessage*",
-        "sqs:PurgeQueue",
-        "sqs:ChangeMessageVisibility*"
-      ],
-      "Resource": [
-        "${element(aws_sqs_queue.queue.*.arn, count.index)}"
-      ]
-    }
-  ]
-}
-EOF
-
+    actions = [
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage*",
+      "sqs:PurgeQueue",
+      "sqs:ChangeMessageVisibility*"
+    ]
+  }
 }
 
-resource "aws_iam_policy" "pusher_policy" {
-  count = length(var.name)
-  name = "sqs_${var.name[count.index]}_${var.project}_${var.environment}_pusher"
+data "aws_iam_policy_document" "pusher" {
+  statement {
+    effect    = "Allow"
+    resources = [aws_sqs_queue.queue.arn]
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "sqs:GetQueueAttributes",
-        "sqs:GetQueueUrl",
-        "sqs:SendMessage*"
-      ],
-      "Resource": [
-        "${element(aws_sqs_queue.queue.*.arn, count.index)}"
-      ]
-    }
-  ]
-}
-EOF
-
+    actions = [
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:SendMessage*"
+    ]
+  }
 }
 
+resource "aws_iam_policy" "consumer" {
+  name   = "sqs-${var.name}-consumer"
+  policy = data.aws_iam_policy_document.consumer.json
+}
+
+resource "aws_iam_policy" "pusher" {
+  name   = "sqs-${var.name}-pusher"
+  policy = data.aws_iam_policy_document.pusher.json
+}
