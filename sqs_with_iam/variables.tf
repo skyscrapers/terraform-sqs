@@ -1,53 +1,88 @@
-variable "environment" {
-  description = "How do you want to call your environment, this is helpful if you have more than 1 VPC"
-}
-
-variable "project" {
-  description = "The project of this queue(s)"
-}
-
 variable "name" {
-  description = "List of the SQS queue names. If you provide multiple names, each queue will be setup with the same configuration"
-  type        = list(string)
+  type        = string
+  description = "The SQS queue name"
 }
 
 variable "visibility_timeout_seconds" {
-  description = "The timeout in seconds of visibility of the message"
+  type        = number
+  description = "The visibility timeout for the queue. An integer from 0 to 43200 (12 hours). The default for this attribute is 30."
   default     = 30
 }
 
-variable "delay_seconds" {
-  description = "Delay in displaying message"
-  default     = "0"
+variable "message_retention_seconds" {
+  type        = number
+  description = "The number of seconds Amazon SQS retains a message. Integer representing seconds, from 60 (1 minute) to 1209600 (14 days). The default for this attribute is 345600 (4 days)"
+  default     = 345600
 }
 
 variable "max_message_size" {
-  description = "Max size of the message default to 256KB"
-  default     = "262144"
+  type        = number
+  description = "The limit of how many bytes a message can contain before Amazon SQS rejects it. An integer from 1024 bytes (1 KiB) up to 262144 bytes (256 KiB). The default for this attribute is 262144 (256 KiB)"
+  default     = 262144
 }
 
-variable "message_retention_seconds" {
-  description = "Seconds of retention of the message default to 4 days"
-  default     = "345600"
+variable "delay_seconds" {
+  type        = number
+  description = "The time in seconds that the delivery of all messages in the queue will be delayed. An integer from 0 to 900 (15 minutes). The default for this attribute is 0 seconds"
+  default     = 0
 }
 
 variable "receive_wait_time_seconds" {
-  description = "The time for which a ReceiveMessage call will wait for a message to arrive (long polling) before returning. An integer from 0 to 20 (seconds). The default for this attribute is 0, meaning that the call will return immediately."
-  default     = "20"
+  type        = number
+  description = "The time for which a ReceiveMessage call will wait for a message to arrive (long polling) before returning. An integer from 0 to 20 (seconds). The default for this attribute is 0, meaning that the call will return immediately"
+  default     = 0
 }
 
 variable "dead_letter_queue" {
+  type        = string
   description = "The dead letter queue to use for undeliverable messages"
-  default     = ""
+  default     = null
 }
 
 variable "max_receive_count" {
-  description = "Maximum receive count"
-  default     = "5"
+  type        = number
+  description = "maxReceiveCount for the Dead Letter Queue redrive policy"
+  default     = 5
 }
 
 variable "fifo_queue" {
-  description = "Configure the queue(s) to be FIFO queue(s). This will append the required extension `.fifo` to the queue name(s)."
-  default     = "false"
+  type        = bool
+  description = "Boolean designating a FIFO queue. If not set, it defaults to false making it standard. This will append the required extension `.fifo` to the queue name"
+  default     = false
 }
 
+variable "content_based_deduplication" {
+  type        = bool
+  description = "Enables content-based deduplication for FIFO queues"
+  default     = false
+}
+
+variable "deduplication_scope" {
+  type        = string
+  description = "Specifies whether message deduplication occurs at the message group or queue level. Valid values are `messageGroup` and `queue` (default)"
+  default     = null
+}
+
+variable "fifo_throughput_limit" {
+  type        = string
+  description = "Specifies whether the FIFO queue throughput quota applies to the entire queue or per message group. Valid values are `perQueue` (default) and `perMessageGroupId`"
+  default     = null
+}
+
+variable "kms_master_key_id" {
+  type        = string
+  description = "The ID of an AWS-managed customer master key (CMK) for Amazon SQS or a custom CMK"
+  default     = null
+}
+
+variable "kms_data_key_reuse_period_seconds" {
+  type        = number
+  description = "The length of time, in seconds, for which Amazon SQS can reuse a data key to encrypt or decrypt messages before calling AWS KMS again. An integer representing seconds, between 60 seconds (1 minute) and 86,400 seconds (24 hours). The default is 300 (5 minutes)"
+  default     = null
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to assign to the queue"
+  default     = null
+}
