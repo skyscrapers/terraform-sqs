@@ -72,8 +72,8 @@ module "sqs" {
 
   for_each = toset(["myqueue"])
 
-  name                      = "${each.key}-${terraform.workspace}"
-  fifo_queue                = true
+  name       = "${each.key}-${terraform.workspace}"
+  fifo_queue = true
 }
 
 resource "aws_iam_role_policy_attachment" "sqs_consumer_attach" {
