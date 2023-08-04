@@ -12,6 +12,15 @@ data "aws_iam_policy_document" "consumer" {
       "sqs:ChangeMessageVisibility*"
     ]
   }
+
+  statement {
+    effect    = "Allow"
+    resources = [var.kms_master_key_id]
+
+    actions = [
+      "kms:Decrypt"
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "pusher" {
@@ -23,6 +32,16 @@ data "aws_iam_policy_document" "pusher" {
       "sqs:GetQueueAttributes",
       "sqs:GetQueueUrl",
       "sqs:SendMessage*"
+    ]
+  }
+
+  statement {
+    effect    = "Allow"
+    resources = [var.kms_master_key_id]
+
+    actions = [
+      "kms:GenerateDataKey",
+      "kms:Decrypt"
     ]
   }
 }
