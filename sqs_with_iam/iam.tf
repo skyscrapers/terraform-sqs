@@ -13,13 +13,17 @@ data "aws_iam_policy_document" "consumer" {
     ]
   }
 
-  statement {
-    effect    = "Allow"
-    resources = [var.kms_master_key_id]
+  dynamic "statement" {
+    for_each = var.kms_master_key_id != null ? [1] : []
 
-    actions = [
-      "kms:Decrypt"
-    ]
+    content {
+      effect    = "Allow"
+      resources = [var.kms_master_key_id]
+
+      actions = [
+        "kms:Decrypt"
+      ]
+    }
   }
 }
 
@@ -35,14 +39,18 @@ data "aws_iam_policy_document" "pusher" {
     ]
   }
 
-  statement {
-    effect    = "Allow"
-    resources = [var.kms_master_key_id]
+  dynamic "statement" {
+    for_each = var.kms_master_key_id != null ? [1] : []
 
-    actions = [
-      "kms:GenerateDataKey",
-      "kms:Decrypt"
-    ]
+    content {
+      effect    = "Allow"
+      resources = [var.kms_master_key_id]
+
+      actions = [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ]
+    }
   }
 }
 
